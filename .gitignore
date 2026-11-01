@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+data/
+renders/
+materials/
+resources/
+*.log
+dist/
+vanilla-resources.zip
+
+# 用户自行放入的 Mojang 资源包，不要提交
+**/assets/vanilla-resources/*.zip

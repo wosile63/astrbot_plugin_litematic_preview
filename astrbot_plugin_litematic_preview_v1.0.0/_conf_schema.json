@@ -1,0 +1,521 @@
+{
+  "enabled": {
+    "description": "启用插件",
+    "type": "bool",
+    "default": true,
+    "hint": "关闭后本插件不再响应任何文件或消息。"
+  },
+  "render_engine": {
+    "description": "渲染引擎",
+    "type": "string",
+    "default": "auto",
+    "options": [
+      "auto",
+      "java",
+      "python"
+    ],
+    "labels": [
+      "自动（推荐：优先 Java 真实材质）",
+      "Java 真实材质渲染",
+      "简化 Python 渲染"
+    ],
+    "hint": "Java 引擎使用内置独立渲染器读取原版资源包，渲染出真实材质/方块模型/光照；只接受 .litematic，其它格式（.schem/.schematic/.nbt/Axiom .bp）会自动先转成 litematic；需要 Java 21+。简化 Python 引擎不需要 Java，但只有纯色方块。"
+  },
+  "render_unified_size": {
+    "description": "渲染输出尺寸（统一设置）",
+    "type": "int",
+    "default": 2048,
+    "slider": {
+      "min": 256,
+      "max": 8192,
+      "step": 256
+    },
+    "hint": "统一控制单视角、四视角单张、2×2 总览图、简化渲染的输出尺寸（像素，正方形）。自动清晰度开启时可能在此基础上自动提高；需要分别设置请打开下面的“高级：单独修改尺寸”。"
+  },
+  "render_size_advanced": {
+    "description": "高级：单独修改渲染尺寸",
+    "type": "object",
+    "hint": "默认关闭；关闭时所有输出尺寸统一使用上面的“渲染输出尺寸”。",
+    "items": {
+      "enabled": {
+        "description": "启用单独尺寸（覆盖统一设置）",
+        "type": "bool",
+        "default": false
+      },
+      "single": {
+        "description": "单视角尺寸",
+        "type": "int",
+        "default": 1024,
+        "slider": {
+          "min": 256,
+          "max": 8192,
+          "step": 256
+        }
+      },
+      "quad_view": {
+        "description": "四视角单张尺寸",
+        "type": "int",
+        "default": 768,
+        "slider": {
+          "min": 256,
+          "max": 8192,
+          "step": 256
+        }
+      },
+      "quad_grid": {
+        "description": "2×2 总览图最长边",
+        "type": "int",
+        "default": 2048,
+        "slider": {
+          "min": 800,
+          "max": 8192,
+          "step": 128
+        }
+      },
+      "python_width": {
+        "description": "简化渲染最大宽度",
+        "type": "int",
+        "default": 1600,
+        "slider": {
+          "min": 320,
+          "max": 8192,
+          "step": 160
+        }
+      },
+      "python_height": {
+        "description": "简化渲染最大高度",
+        "type": "int",
+        "default": 1600,
+        "slider": {
+          "min": 320,
+          "max": 8192,
+          "step": 160
+        }
+      },
+      "auto_max": {
+        "description": "自动清晰度分辨率上限",
+        "type": "int",
+        "default": 8192,
+        "slider": {
+          "min": 256,
+          "max": 8192,
+          "step": 128
+        }
+      }
+    }
+  },
+  "java_path": {
+    "description": "Java 可执行文件路径",
+    "type": "string",
+    "default": "",
+    "hint": "留空自动查找（PATH / JAVA_HOME / Program Files / .minecraft runtime）。需要 Java 21 或更高版本。"
+  },
+  "java_resources_path": {
+    "description": "原版资源包路径（用户自备，真实材质渲染必需）",
+    "type": "string",
+    "default": "",
+    "hint": "填写 Minecraft 原版资源包 .zip 的路径；留空时自动查找插件数据目录 resources/ 和插件内 assets/vanilla-resources/ 下的 zip。发布版不内置 Mojang 原版资源，请使用自己的 Minecraft 资源生成/导出资源包（见 tools/build_vanilla_resource_pack.py）。"
+  },
+  "java_auto_resolution": {
+    "description": "自动清晰度（单视角按投影尺寸自动提高分辨率）",
+    "type": "bool",
+    "default": true,
+    "hint": "开启后，单视角渲染会根据投影尺寸自动把分辨率提高到能看清方块纹理的程度（例如大建筑 1024 → 4096/8192，受 java_auto_max_size 限制）；关闭则严格使用 java_output_size。"
+  },
+  "java_auto_pixels_per_block": {
+    "description": "清晰度目标：每个方块至少占多少像素",
+    "type": "int",
+    "default": 8,
+    "slider": {
+      "min": 2,
+      "max": 20,
+      "step": 1
+    },
+    "hint": "自动清晰度使用；8 表示单个方块在图中至少约 8px（16×16 原版贴图刚好够采样），越大越清晰也越慢。"
+  },
+  "java_background": {
+    "description": "Java 渲染背景色",
+    "type": "string",
+    "default": "#000000",
+    "hint": "十六进制颜色，例如 #000000（黑）、#1e2230（深蓝灰）、#f2f2f2（浅灰）。"
+  },
+  "java_transparent_background": {
+    "description": "透明背景",
+    "type": "bool",
+    "default": true,
+    "hint": "开启后输出 PNG 带透明通道（部分客户端显示效果不可控）。"
+  },
+  "java_rotation": {
+    "description": "等距视角旋转角",
+    "type": "int",
+    "default": 135,
+    "slider": {
+      "min": 0,
+      "max": 360,
+      "step": 5
+    },
+    "hint": "135° 为参考项目默认值；调整可改变朝向。"
+  },
+  "java_slant": {
+    "description": "等距视角俯仰角",
+    "type": "int",
+    "default": 36,
+    "slider": {
+      "min": -60,
+      "max": 60,
+      "step": 1
+    },
+    "hint": "36° 对应 Isometric Renders 的正二轴测预设。"
+  },
+  "java_fill": {
+    "description": "主体在画布中的占比",
+    "type": "float",
+    "default": 0.85,
+    "slider": {
+      "min": 0.3,
+      "max": 1.0,
+      "step": 0.01
+    },
+    "hint": "越大主体越满、边缘越可能贴边。"
+  },
+  "java_supersampling": {
+    "description": "Java 超采样倍率",
+    "type": "int",
+    "default": 1,
+    "slider": {
+      "min": 1,
+      "max": 4,
+      "step": 1
+    },
+    "hint": ">1 会以更高分辨率渲染再缩小，更平滑但内存需求按倍率平方增长；分辨率较高/内存不足时插件会自动降低超采样并提示。"
+  },
+  "java_heap_mb": {
+    "description": "Java 堆内存上限（MB）",
+    "type": "int",
+    "default": 512,
+    "slider": {
+      "min": 256,
+      "max": 16384,
+      "step": 512
+    },
+    "hint": "JVM 堆内存下限；插件会按分辨率×超采样和文件大小自动抬高，上限为本机物理内存的 50%（最少 1GB），内存不足时自动加大重试最多 3 次。"
+  },
+  "java_render_timeout_seconds": {
+    "description": "Java 渲染超时（秒）",
+    "type": "int",
+    "default": 60,
+    "slider": {
+      "min": 30,
+      "max": 1800,
+      "step": 30
+    },
+    "hint": "Java 渲染超时下限；插件会按分辨率×超采样自动放宽（最高 1800s）。"
+  },
+  "java_send_both_views": {
+    "description": "同时发送正/反两个视角",
+    "type": "bool",
+    "default": false,
+    "hint": "仅单视角模式（java_views=single）下生效：Java 渲染器一次会输出正面和旋转 180° 两个视角，开启后两张一起发。"
+  },
+  "java_views": {
+    "description": "视角模式",
+    "type": "string",
+    "default": "quad",
+    "options": [
+      "quad",
+      "single"
+    ],
+    "labels": [
+      "四对角视角（推荐：4 个方向）",
+      "单视角"
+    ],
+    "hint": "quad：用 rotation、rotation+90 各渲染一次，共 4 个 90° 间隔的视角（默认 135°/225°/315°/45°），拼成 2×2 总览图或分 4 张发送；single：只发一个视角（可配合 java_send_both_views 发正/反两张）。"
+  },
+  "java_quad_layout": {
+    "description": "四视角发送方式",
+    "type": "string",
+    "default": "grid",
+    "options": [
+      "grid",
+      "separate"
+    ],
+    "labels": [
+      "拼成一张 2×2 总览图（推荐）",
+      "4 张图片放在同一条消息"
+    ],
+    "hint": "grid 会带视角角度标签拼成一张图，发送稳定、单图查看方便；separate 会发送 4 张独立图片。"
+  },
+  "java_cache_max_mb": {
+    "description": "渲染缓存大小上限（MB）",
+    "type": "int",
+    "default": 300,
+    "slider": {
+      "min": 0,
+      "max": 5000,
+      "step": 100
+    },
+    "hint": "同一文件+同一参数第二次渲染直接读缓存；0 表示关闭缓存。"
+  },
+  "java_fallback_to_python": {
+    "description": "Java 渲染失败时回退到简化渲染",
+    "type": "bool",
+    "default": true,
+    "hint": "关闭后 Java 不可用/失败时直接报错，不会发送简化图片。"
+  },
+  "java_material_packs": {
+    "description": "材质包列表（可启用/关闭，支持拖入 zip 上传）",
+    "type": "template_list",
+    "templates": {
+      "pack": {
+        "name": "材质包",
+        "display_item": "name",
+        "hide_hint_in_list": true,
+        "items": {
+          "enabled": {
+            "description": "启用",
+            "type": "bool",
+            "default": true
+          },
+          "name": {
+            "description": "显示名称",
+            "type": "string",
+            "default": ""
+          },
+          "file": {
+            "description": "上传材质包（拖入 .zip）",
+            "type": "file",
+            "default": [],
+            "file_types": [
+              "zip"
+            ]
+          },
+          "path": {
+            "description": "或填写材质包路径（内置/本地 zip）",
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
+    "default": [],
+    "hint": "每个材质包可单独启用/关闭；可拖入 zip 上传，也可填本地路径。列表越靠后优先级越高。插件不再内置 XK 材质包，需要时请自行添加。"
+  },
+  "material_list_enabled": {
+    "description": "渲染结果同时列出所需物品数量",
+    "type": "bool",
+    "default": true,
+    "hint": "按投影方块统计需要的物品与数量（双台阶×2、雪层按层数、门/床只算一次、盆栽=花盆+植物等）；长清单只显示前 N 种，完整清单可用 file 或 xlsx 模式发送。"
+  },
+  "material_list_mode": {
+    "description": "材料清单发送方式",
+    "type": "string",
+    "default": "image",
+    "options": [
+      "image",
+      "xlsx",
+      "file",
+      "text",
+      "off"
+    ],
+    "labels": [
+      "表格图片（推荐）",
+      "只发 Excel（.xlsx）",
+      "发送 txt 文件（完整清单）",
+      "消息文本（仅前 N 种）",
+      "关闭材料清单（不发送）"
+    ],
+    "hint": "image：材料清单画成表格 PNG（自动分页）；xlsx：只发 Excel 文件；file：发送完整 .txt；text：回复消息里列前 N 种；off：完全关闭材料清单。"
+  },
+  "material_list_max_items": {
+    "description": "材料清单最多显示多少种物品",
+    "type": "int",
+    "default": 15,
+    "slider": {
+      "min": 1,
+      "max": 50,
+      "step": 1
+    },
+    "hint": "仅在 material_list_mode=text 时生效；file 模式会发送完整清单文件。"
+  },
+  "material_list_language": {
+    "description": "材料名称语言",
+    "type": "string",
+    "default": "zh_cn",
+    "options": [
+      "zh_cn",
+      "en_us"
+    ],
+    "labels": [
+      "中文（简体）",
+      "English"
+    ],
+    "hint": "物品名称显示语言；未知物品会退回显示物品 ID。"
+  },
+  "java_concurrency": {
+    "description": "Java 渲染并发数",
+    "type": "int",
+    "default": 1,
+    "slider": {
+      "min": 1,
+      "max": 4,
+      "step": 1
+    },
+    "hint": "每个 Java 渲染进程可能占用数 GB 堆内存，默认串行（1）；内存充足且投影较小时可调大。"
+  },
+  "trigger_at_all": {
+    "description": "允许 @全体成员 触发渲染",
+    "type": "bool",
+    "default": false,
+    "hint": "默认只有 @机器人 才会触发；开启后 @全体成员 也会触发。"
+  },
+  "auto_render_group_upload": {
+    "description": "群文件上传后自动渲染（不需要 @ 机器人）",
+    "type": "bool",
+    "default": false,
+    "hint": "开启后，群里有人发投影文件（文件消息/群文件上传）就自动渲染回复，不需要再 @ 机器人；关闭时先缓存文件，等你 @ 机器人再渲染。可能会比较吵，默认关闭。"
+  },
+  "auto_render_private": {
+    "description": "私聊文件自动渲染",
+    "type": "bool",
+    "default": true,
+    "hint": "私聊直接把文件发给机器人就渲染，不需要额外发消息。"
+  },
+  "pending_timeout_seconds": {
+    "description": "待渲染文件的等待时间（秒）",
+    "type": "int",
+    "default": 600,
+    "slider": {
+      "min": 30,
+      "max": 1800,
+      "step": 30
+    },
+    "hint": "群里发过文件后，在这个时间内 @机器人 就会渲染刚发的文件。"
+  },
+  "pending_any_user_in_group": {
+    "description": "允许 @机器人 触发本群其他人上传的文件",
+    "type": "bool",
+    "default": false,
+    "hint": "默认只渲染「自己刚上传」的文件；开启后 @机器人 会取本群最近上传的投影文件，不限制上传者。"
+  },
+  "cooldown_seconds": {
+    "description": "同一用户的渲染冷却时间（秒）",
+    "type": "int",
+    "default": 3,
+    "slider": {
+      "min": 0,
+      "max": 60,
+      "step": 1
+    },
+    "hint": "防止连续刷屏；0 表示不限制。"
+  },
+  "max_files_per_message": {
+    "description": "单条消息最多渲染的文件数",
+    "type": "int",
+    "default": 3,
+    "slider": {
+      "min": 1,
+      "max": 9,
+      "step": 1
+    }
+  },
+  "max_file_size_mb": {
+    "description": "单个投影文件大小上限（MB）",
+    "type": "int",
+    "default": 50,
+    "slider": {
+      "min": 1,
+      "max": 512,
+      "step": 1
+    }
+  },
+  "max_schematic_volume": {
+    "description": "投影包围盒体积上限（格）",
+    "type": "int",
+    "default": 32000000,
+    "slider": {
+      "min": 1000000,
+      "max": 200000000,
+      "step": 1000000
+    },
+    "hint": "按 宽×高×长 计算；默认 32,000,000，可调高以解析大型投影（如 433×160×426=29,513,280），最高 200,000,000。调高会显著增加内存/渲染时间，建议配合加大 Java 堆。"
+  },
+  "reply_on_unsupported": {
+    "description": "遇到不支持的文件格式时提示",
+    "type": "bool",
+    "default": true
+  },
+  "reply_with_text": {
+    "description": "图片同时附带尺寸/方块数等文字信息",
+    "type": "bool",
+    "default": true
+  },
+  "render_tile_size": {
+    "description": "简化渲染方块大小偏好（像素）",
+    "type": "int",
+    "default": 28,
+    "slider": {
+      "min": 4,
+      "max": 32,
+      "step": 4
+    },
+    "hint": "仅在简化渲染时生效；结构很大时会自动缩小。"
+  },
+  "render_background": {
+    "description": "简化渲染背景",
+    "type": "string",
+    "default": "dark",
+    "options": [
+      "dark",
+      "light"
+    ],
+    "labels": [
+      "深色（推荐）",
+      "浅色"
+    ],
+    "hint": "仅在简化渲染时生效；也可以填 #RRGGBB 自定义背景色。"
+  },
+  "render_show_caption": {
+    "description": "简化渲染在图片左下角显示名称/尺寸",
+    "type": "bool",
+    "default": true
+  },
+  "render_skip_decorations": {
+    "description": "简化渲染跳过空气/水/玻璃/花草等装饰方块",
+    "type": "bool",
+    "default": true,
+    "hint": "仅在简化渲染时生效。"
+  },
+  "render_max_visible_blocks": {
+    "description": "简化渲染最多渲染的可见方块数",
+    "type": "int",
+    "default": 1000000,
+    "slider": {
+      "min": 10000,
+      "max": 2000000,
+      "step": 10000
+    },
+    "hint": "超出上限会提示投影过大；Java 渲染不受此限制。"
+  },
+  "render_concurrency": {
+    "description": "同时渲染的任务数",
+    "type": "int",
+    "default": 1,
+    "slider": {
+      "min": 1,
+      "max": 8,
+      "step": 1
+    },
+    "hint": "Java 渲染每个任务会启动一个 JVM 进程，内存紧张时建议 1。"
+  },
+  "render_timeout_seconds": {
+    "description": "简化渲染解析+渲染超时（秒）",
+    "type": "int",
+    "default": 180,
+    "slider": {
+      "min": 30,
+      "max": 600,
+      "step": 30
+    },
+    "hint": "Java 渲染请用 java_render_timeout_seconds。"
+  }
+}

@@ -1,0 +1,6 @@
+# 插件运行时依赖。AstrBot 自带的 venv 通常已经包含这两个包，
+# 这里声明出来是为了在极端情况下（依赖缺失）让 AstrBot 自动补装。
+numpy>=1.24
+pillow>=10.0
+# 生成材料清单 .xlsx（AstrBot 自带 openpyxl，这里声明以防缺失）
+openpyxl>=3.0

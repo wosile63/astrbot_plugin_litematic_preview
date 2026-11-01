@@ -1,0 +1,42 @@
+材料清单数据（materials_data.json）说明与许可
+================================================
+
+本文件随插件分发，用于把投影里的方块映射为物品并提供名称/堆叠数。
+
+1) 方块 / 物品 / 堆叠数 / 英文名数据
+   来源：PrismarineJS/minecraft-data（https://github.com/PrismarineJS/minecraft-data）
+   版本：1.21.9 数据；本项目仅提取精简后的“物品名/堆叠数”与“没有同名物品的方块列表”，
+   生成脚本：tools/build_materials_data.py
+   许可证：MIT
+   版权：Copyright (c) PrismarineJS contributors
+
+   MIT License
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
+
+2) 中文物品名称
+   来源：Mojang 官方 Minecraft 资源文件 assets/minecraft/lang/zh_cn.json
+   版权归 Mojang / Microsoft 所有；与本项目内置的原版资源包（vanilla resources zip）同类，
+   仅作为本地个人使用（本项目未获得 Mojang 授权，请勿再分发该语言数据）。
+   如不需要中文名，可把插件配置 material_list_language 改为 en_us，或删除本数据中的中文名。
+
+3) 统计规则依据
+   行为语义参考 Litematica（maruohon/litematica，LGPL-3.0）与 LitematicaMaterialCounter
+   （TianKong-y/LitematicaMaterialCounter，GPL-3.0）的公开文档/行为，由本项目独立实现；
+   未复制上述 GPL/LGPL 项目的源代码。
