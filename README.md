@@ -1,11 +1,11 @@
 # Litematic 投影预览 · AstrBot 插件
 
+> 本插件由 AI 辅助开发；因为是第一次制作插件，如有不足之处还请见谅。
+
 在 QQ 里发送 Minecraft 投影/结构文件并 **@机器人**，自动渲染真实材质的等距 3D 预览图，同时给出尺寸、方块数和所需材料清单。
 
 **当前版本：v1.0.0** · 支持 `.litematic` / `.schem` / `.schematic` / `.nbt` / Axiom `.bp`
 
-当前源码目录：`astrbot_plugin_litematic_preview_v1.0.0/`  
-完整配置说明：[`astrbot_plugin_litematic_preview_v1.0.0/README.md`](astrbot_plugin_litematic_preview_v1.0.0/README.md)
 
 ## 环境要求
 
@@ -16,7 +16,7 @@
 
 ## 安装
 
-1. 把 `astrbot_plugin_litematic_preview_v1.0.0/` 复制到：
+1. 把本仓库（或 Release 压缩包）中的插件文件复制到：
    ```
    <AstrBot>/data/plugins/astrbot_plugin_litematic_preview/
    ```
@@ -29,18 +29,14 @@
 
 ## 官方材质包获取
 
-> ⚠️ 本项目不附带、不分发 Mojang 官方资源。原版资源版权归 Mojang / Microsoft；
-> 请确认你自行获取和使用的方式符合 Minecraft EULA 及当地法律。
-
-<!-- 维护者：请在此处填写官方材质包的合法获取方式。 -->
-
-（待维护者填写）
+⚠️ 本项目不附带、不分发 Mojang 官方资源。原版资源版权归 Mojang / Microsoft；
+请确认你自行获取和使用的方式符合 Minecraft EULA 及当地法律。
 
 ### 资源包放置方式
 
 准备好资源包 zip 后，任选一种：
 
-- 放进 `astrbot_plugin_litematic_preview_v1.0.0/assets/vanilla-resources/`（任意 `.zip`，自动扫描）；
+- 放进 `assets/vanilla-resources/`（任意 `.zip`，自动扫描）；
 - 放进插件数据目录 `data/plugin_data/astrbot_plugin_litematic_preview/resources/`；
 - 在配置 `java_resources_path` 中填写 zip 绝对路径。
 
@@ -95,5 +91,5 @@
 ## 许可
 
 - 代码采用 MIT License（见 `LICENSE`）。
-- 不包含 Mojang 原版资源包和 XK 材质包；获取与使用由用户自行负责。
+- 不包含 Mojang 原版资源包；获取与使用由用户自行负责。
 - Java 渲染器 jar 为 MIT；其他声明见 `THIRD_PARTY_NOTICES.md`。

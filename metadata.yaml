@@ -2,5 +2,5 @@ name: astrbot_plugin_litematic_preview
 display_name: Minecraft 投影预览渲染
 desc: 发送投影文件并 @机器人，自动用真实材质/方块模型渲染成等距预览图；支持 .litematic/.schem/.schematic/.nbt/Axiom .bp，最多 8192 分辨率，默认一次给出 4 个对角视角并附材料表格/Excel（统一渲染尺寸；资源包/材质包由用户自备；无需启动 Minecraft）
 version: v1.0.0
-author: DSH
+author: wosile63
 repo: ""
